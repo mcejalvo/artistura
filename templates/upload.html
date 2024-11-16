@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,6 +25,12 @@
             width: 100px;
             height: 100px;
         }
+        .max-retos-message {
+            color: #8B4513;
+            font-size: 0.9em;
+            margin-top: 5px;
+            display: none; /* Hidden by default */
+        }
     </style>
     <script>
         function updateRetoNumber() {
@@ -37,29 +42,73 @@
                 })
                 .catch(error => console.error("Error fetching reto number:", error));
         }
-        function showLoading() {
-            document.getElementById("loadingOverlay").style.display = "flex";
+
+        function toggleRetoField() {
+            const isBonus = document.getElementById("bonus").checked;
+            const retoSection = document.getElementById("reto-section");
+            if (isBonus) {
+                retoSection.style.display = "none";
+            } else {
+                retoSection.style.display = "block";
+                updateRetoNumber(); // Fetch the next reto number if not a bonus
+            }
         }
-        window.onload = updateRetoNumber;
+
+        function checkMaxRetos() {
+            const maxRetos = {{ max_retos }};
+            const nameDropdown = document.getElementById("name");
+            const name = nameDropdown.value;
+            const retoCount = parseInt(nameDropdown.selectedOptions[0].dataset.retoCount, 10);
+
+            const bonusCheckbox = document.getElementById("bonus");
+            const maxRetosMessage = document.getElementById("max-retos-message");
+
+            if (retoCount >= maxRetos) {
+                bonusCheckbox.checked = true;
+                bonusCheckbox.disabled = true; // Disable checkbox if max retos reached
+                maxRetosMessage.style.display = "block"; // Show max retos message
+                toggleRetoField(); // Ensure Reto field is hidden
+                console.log(`User ${name} has reached max retos. Bonus only.`);
+            } else {
+                bonusCheckbox.checked = false;
+                bonusCheckbox.disabled = false; // Enable checkbox if retos are still available
+                maxRetosMessage.style.display = "none"; // Hide max retos message
+                toggleRetoField(); // Ensure Reto field is shown
+                console.log(`User ${name} can still submit retos.`);
+            }
+        }
+
+        window.onload = function () {
+            updateRetoNumber();
+            checkMaxRetos();
+        };
     </script>
 </head>
 <body>
     <h1>{{ page_title }}</h1>
     <a href="{{ url_for('gallery') }}" style="margin-bottom: 20px; display: inline-block;">
-        <button class="button">Go to Gallery</button>
+        <button class="button">Volver a la Galería</button>
     </a>
     <div id="loadingOverlay" class="loading-overlay">
         <img src="{{ url_for('static', filename='images/loading.gif') }}" alt="Loading...">
     </div>
     <form method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
         <label for="name">{{ name_label }}</label>
-        <select name="name" id="name" onchange="updateRetoNumber()" required>
+        <select name="name" id="name" onchange="updateRetoNumber(); checkMaxRetos();" required>
             {% for name in names %}
-                <option value="{{ name }}">{{ name }}</option>
+                <option value="{{ name }}" data-reto-count="{{ retos.get(name, 0) }}">{{ name }}</option>
             {% endfor %}
         </select><br><br>
-        <label for="reto">{{ reto_label }}</label>
-        <input type="text" id="reto" name="reto" readonly><br><br>
+
+        <label for="bonus">Entrega Bonus</label>
+        <input type="checkbox" id="bonus" name="bonus" onchange="toggleRetoField()"><br>
+        <span id="max-retos-message" class="max-retos-message">Retos superados! Puedes subir imágenes extra!</span><br><br>
+
+        <div id="reto-section">
+            <label for="reto">{{ reto_label }}</label>
+            <input type="text" id="reto" name="reto" readonly><br><br>
+        </div>
+
         <label for="file">{{ choose_image_label }}</label>
         <input type="file" name="file" id="file" required><br><br>
         <button type="submit" class="button">{{ button_label }}</button>
