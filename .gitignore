@@ -8,5 +8,5 @@
 __pycache__/
 
 # Ignore static uploads folder
-static/upload/
+static/uploads/
 /env
