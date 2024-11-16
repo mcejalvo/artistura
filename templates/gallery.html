@@ -1,0 +1,188 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ gallery_title }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        .header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header .button {
+            background-color: #5a9;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .header .button:hover {
+            background-color: #47875a;
+        }
+
+        #size-slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .reto-header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .reto-description {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 2em;
+            color: white;
+            cursor: pointer;
+        }
+
+        .image-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .artist-name {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 5px;
+        }
+    </style>
+    <script>
+        function openModal(imageSrc) {
+            const modal = document.getElementById("imageModal");
+            const modalImage = document.getElementById("modalImage");
+            modal.style.display = "flex";
+            modalImage.src = imageSrc;
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("imageModal");
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById("imageModal");
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        function confirmDelete(filename) {
+            if (confirm("Are you sure you want to delete this image?")) {
+                window.location.href = `/delete/${filename}`;
+            }
+        }
+
+        function updateImageSize() {
+            const slider = document.getElementById("size-slider");
+            const imgSize = slider.value + "px";
+            document.documentElement.style.setProperty('--img-size', imgSize);
+            document.getElementById("slider-value").textContent = imgSize;
+        }
+    </script>
+</head>
+<body>
+    <div class="header">
+        <a href="{{ url_for('upload_image') }}">
+            <button class="button">{{ upload_button_label }}</button>
+        </a>
+        <div id="size-slider-container">
+            <label for="size-slider">{{ image_size_label }}:</label>
+            <input type="range" id="size-slider" min="50" max="400" value="200" oninput="updateImageSize()">
+            <span id="slider-value">200px</span>
+        </div>
+    </div>
+
+    <h1 style="color: {{ title_color }};">{{ gallery_title }}</h1>
+
+    {% for reto, images in retos.items() %}
+        <div class="reto-section">
+            <div class="reto-header">
+                <h2>{{ reto }}: {{ reto_details[reto].nombre }}</h2>
+            </div>
+            <div class="reto-description">
+                <p>{{ reto_details[reto].descripcion }}</p>
+            </div>
+            <div>
+                {% for image in images %}
+                    <div class="image-container">
+                        <img src="{{ url_for('static', filename='uploads/' + image) }}" 
+                             alt="Image" 
+                             onclick="openModal('{{ url_for('static', filename='uploads/' + image) }}')">
+                        <button class="delete-button" onclick="confirmDelete('{{ image }}')">X</button>
+                        <div class="artist-name">
+                            {% set artist = image.split('-')[2].rsplit('.', 1)[0] %}
+                            {{ artist | capitalize }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+
+    {% if bonus_images %}
+        <div class="reto-section">
+            <h2 class="reto-header">Bonus</h2>
+            <div>
+                {% for image in bonus_images %}
+                    <div class="image-container">
+                        <img src="{{ url_for('static', filename='uploads/' + image) }}" 
+                             alt="Image" 
+                             onclick="openModal('{{ url_for('static', filename='uploads/' + image) }}')">
+                        <button class="delete-button" onclick="confirmDelete('{{ image }}')">X</button>
+                        <div class="artist-name">
+                            {% set artist = image.split('-')[2].rsplit('.', 1)[0] %}
+                            {{ artist | capitalize }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <div id="imageModal" class="modal">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage" alt="Full-size image">
+    </div>
+</body>
+</html>

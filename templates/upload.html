@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ page_title }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        h1 {
+            color: {{ title_color }};
+        }
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .loading-overlay img {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+    <script>
+        function updateRetoNumber() {
+            const name = document.getElementById("name").value;
+            fetch(`/get_next_reto_number?name=${name}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("reto").value = data.next_reto;
+                })
+                .catch(error => console.error("Error fetching reto number:", error));
+        }
+        function showLoading() {
+            document.getElementById("loadingOverlay").style.display = "flex";
+        }
+        window.onload = updateRetoNumber;
+    </script>
+</head>
+<body>
+    <h1>{{ page_title }}</h1>
+    <a href="{{ url_for('gallery') }}" style="margin-bottom: 20px; display: inline-block;">
+        <button class="button">Go to Gallery</button>
+    </a>
+    <div id="loadingOverlay" class="loading-overlay">
+        <img src="{{ url_for('static', filename='images/loading.gif') }}" alt="Loading...">
+    </div>
+    <form method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
+        <label for="name">{{ name_label }}</label>
+        <select name="name" id="name" onchange="updateRetoNumber()" required>
+            {% for name in names %}
+                <option value="{{ name }}">{{ name }}</option>
+            {% endfor %}
+        </select><br><br>
+        <label for="reto">{{ reto_label }}</label>
+        <input type="text" id="reto" name="reto" readonly><br><br>
+        <label for="file">{{ choose_image_label }}</label>
+        <input type="file" name="file" id="file" required><br><br>
+        <button type="submit" class="button">{{ button_label }}</button>
+    </form>
+</body>
+</html>

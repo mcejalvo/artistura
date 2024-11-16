@@ -1,0 +1,5 @@
+docker build -t flask-app .
+docker ps
+docker stop
+docker remove
+docker run -d -p 5001:5001 --name flask-app --restart always flask-app

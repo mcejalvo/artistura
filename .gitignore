@@ -1,0 +1,12 @@
+# Ignore environment variables
+.env
+.secrets
+
+# Ignore common system files
+*.log
+*.pyc
+__pycache__/
+
+# Ignore static uploads folder
+static/upload/
+/env

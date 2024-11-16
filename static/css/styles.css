@@ -1,0 +1,140 @@
+/* General Page Styles */
+body {
+    font-family: 'Libre Baskerville', serif;
+    background-color: #fdf6e3;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Title Styling (without color) */
+h1 {
+    font-size: 2.5em;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-weight: 700;
+    color: #4e4e4e;
+    margin-bottom: 15px;
+}
+
+/* Form Label Styles */
+label {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #555;
+}
+
+/* Input, Select, and File Upload Styling */
+select, input[type="file"], input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    margin-top: 5px;
+    width: 100%;
+    max-width: 300px;
+}
+
+select:focus, input[type="file"]:focus, input[type="text"]:focus {
+    border-color: #8B4513;
+    outline: none;
+    box-shadow: 0 0 5px rgba(139, 69, 19, 0.5);
+}
+
+/* Button Styles */
+.button {
+    background-color: #5a9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    max-width: 300px;
+    margin-top: 20px;
+}
+
+.button:hover {
+    background-color: #47875a;
+}
+
+/* Slider Container Style */
+#size-slider-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#slider-value {
+    font-weight: bold;
+    color: #666;
+}
+
+/* Gallery Specific Styles */
+.reto-section {
+    margin-bottom: 40px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #faf3e0;
+    width: 80%;
+}
+
+.image-container {
+    position: relative;
+    display: inline-block;
+    margin: 10px;
+    transition: transform 0.2s;
+}
+
+.image-container img {
+    width: var(--img-size, 200px);
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.image-container:hover {
+    transform: scale(1.05);
+}
+
+.delete-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: none;
+    background-color: rgba(255, 0, 0, 0.8);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1em;
+    line-height: 24px;
+    transition: background-color 0.3s;
+}
+
+.delete-button:hover {
+    background-color: rgba(200, 0, 0, 0.9);
+}
+
+.image-container:hover .delete-button {
+    display: block;
+}
+
+/* Title Styling with Custom Color Class */
+.custom-title {
+    font-size: 2.5em;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
