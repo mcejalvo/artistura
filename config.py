@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import os
-
+import json
 
 load_dotenv(".secrets")
 
@@ -8,7 +8,7 @@ load_dotenv(".secrets")
 PORT=os.getenv("PORT")
 
 # List of names for the dropdown
-NAMES_LIST = os.getenv("NAMES_LIST")
+NAMES_LIST = json.loads(os.getenv("NAMES_LIST", "[]"))
 
 # Labels for UI elements
 UPLOAD_BUTTON_LABEL = "Subir dibujo"

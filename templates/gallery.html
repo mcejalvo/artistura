@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -171,7 +170,7 @@
                              onclick="openModal('{{ url_for('static', filename='uploads/' + image) }}')">
                         <button class="delete-button" onclick="confirmDelete('{{ image }}')">X</button>
                         <div class="artist-name">
-                            {% set artist = image.split('-')[2].rsplit('.', 1)[0] %}
+                            {% set artist = image.split('-')[0] %}
                             {{ artist | capitalize }}
                         </div>
                     </div>
