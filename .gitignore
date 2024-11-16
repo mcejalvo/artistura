@@ -1,6 +1,7 @@
 # Ignore environment variables
 .env
 .secrets
+TODO
 
 # Ignore common system files
 *.log
