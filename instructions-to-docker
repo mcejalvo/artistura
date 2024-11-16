@@ -2,4 +2,9 @@ docker build -t flask-app .
 docker ps
 docker stop
 docker remove
-docker run -d -p 5001:5001 --name flask-app --restart always flask-app
+docker run -d \
+  -p 5001:5001 \
+  -v /home/mono/apps/artistura/static/uploads:/app/static/uploads \
+  --name flask-app-container \
+  flask-app
+
